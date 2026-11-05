@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Knee rehab</title>
+<meta name="theme-color" content="#1D9E75">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --text-primary:#1f2328;
+  --text-secondary:#5c6670;
+  --surface-1:#f3f5f4;
+  --page-bg:#ffffff;
+  --border-strong:#b9c1c7;
+  --border-accent:#1D9E75;
+  --bg-accent:#e1f5ee;
+  --text-accent:#0b6b4d;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --text-primary:#eceff1;
+    --text-secondary:#9aa5ad;
+    --surface-1:#22272b;
+    --page-bg:#14181b;
+    --border-strong:#4a545b;
+    --border-accent:#2fc79a;
+    --bg-accent:#12332a;
+    --text-accent:#5fe0b8;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page-bg);color:var(--text-primary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+main{max-width:420px;margin:0 auto;padding:16px 16px 32px;}
+h1{font-size:18px;font-weight:600;margin:0 0 12px;}
+button:disabled{opacity:.4;cursor:default}
+button{font:inherit;color:var(--text-primary);background:var(--surface-1);border:1px solid var(--border-strong);border-radius:8px;padding:10px;cursor:pointer;}
+button:active{transform:scale(.98)}
+.disclaimer{font-size:12px;color:var(--text-secondary);line-height:1.5;margin:20px 0 0;border-top:1px solid var(--border-strong);padding-top:12px;}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Knee rehab</h1>
+<nav id="tabs" style="display:flex;gap:6px;margin:0 0 14px;">
+<button data-s="routine" style="flex:1;font-size:13px;">Routine</button>
+<button data-s="knees" style="flex:1;font-size:13px;">My findings</button>
+<button data-s="3d" style="flex:1;font-size:13px;">3D knee</button>
+</nav>
+<section id="s-routine">
+<div id="today"></div>
+<div id="lists"></div>
+<div style="background:var(--surface-1);border-radius:12px;padding:8px 0;margin-top:4px;">
+<svg width="100%" viewBox="0 0 380 200" role="img"><title>Exercise demonstration</title><desc>A stick figure showing the selected exercise or stretch</desc>
+<line x1="20" y1="176" x2="360" y2="176" stroke="var(--border-strong)" stroke-width="1"/>
+<g id="fig"></g>
+</svg>
+</div>
+<div style="text-align:center;margin:10px 0 4px;">
+<div id="big" style="font-size:48px;font-weight:600;line-height:1.1;min-height:53px;">&nbsp;</div>
+<div id="phase" style="font-size:16px;font-weight:500;color:var(--text-accent);min-height:22px;">Ready</div>
+<div id="sub" style="font-size:13px;color:var(--text-secondary);min-height:18px;"></div>
+</div>
+<div style="margin:12px 0 4px;"><span id="name" style="font-size:16px;font-weight:500;"></span></div>
+<p id="dose" style="font-size:15px;font-weight:500;margin:0 0 2px;color:var(--text-accent);"></p>
+<p id="extra" style="font-size:13px;color:var(--text-secondary);margin:0 0 6px;"></p>
+<p id="cue" style="font-size:14px;color:var(--text-secondary);margin:0 0 8px;line-height:1.5;"></p>
+<p style="font-size:14px;line-height:1.5;margin:0 0 12px;padding:6px 10px;border-left:4px solid #E08A1E;background:var(--surface-1);color:var(--text-primary);"><b>Feet:</b> <span id="foot"></span></p>
+<div id="lp" hidden style="margin:0 0 12px;"><input id="lbar" type="range" min="0" max="1000" value="0" aria-label="Explanation position, drag to rewind or skip ahead" style="width:100%;accent-color:#1D9E75;"><div id="ltime" style="font-size:12px;color:var(--text-secondary);">Drag the bar to rewind or skip ahead</div></div>
+<div style="display:flex;gap:8px;">
+<button id="prev" aria-label="Previous exercise" style="flex:1">&larr;</button>
+<button id="pp" style="flex:3">&#9654; Start this exercise</button>
+<button id="next" aria-label="Next exercise" style="flex:1">&rarr;</button>
+</div>
+<div style="display:flex;gap:8px;margin-top:8px;">
+<button id="whole" style="flex:1;font-size:13px;">Whole routine</button>
+<button id="stop" style="flex:1;font-size:13px;" disabled>Stop</button>
+<button id="skiptalk" style="flex:1;font-size:13px;" hidden>Skip talk</button>
+</div>
+<div style="display:flex;gap:8px;margin-top:8px;">
+<button id="preview" style="flex:1;font-size:13px;">Show movement</button>
+<button id="explain" style="flex:1;font-size:13px;">Explain it to me</button>
+</div>
+<div style="display:flex;gap:8px;margin-top:8px;">
+<button id="o_beep" style="flex:1;font-size:12px;"></button>
+<button id="o_voice" style="flex:1;font-size:12px;"></button>
+<button id="o_learn" style="flex:1;font-size:12px;"></button>
+</div>
+<details style="margin-top:10px;font-size:13px;"><summary style="cursor:pointer;color:var(--text-secondary);">Voice settings</summary>
+<div style="margin:8px 0 0;display:grid;gap:8px;">
+<select id="vsel" style="font:inherit;font-size:13px;padding:8px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-1);color:var(--text-primary);"></select>
+<label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);">Speed <input id="vrate" type="range" min="0.6" max="1.2" step="0.05" style="flex:1"> <span id="vrateo" style="min-width:42px;"></span></label>
+<button id="vnat" style="font-size:13px;"></button>
+<button id="vtest" style="font-size:13px;">Test voice</button>
+<span style="font-size:12px;color:var(--text-secondary);line-height:1.5;">The natural voice is pre-recorded with a neural voice. The list below is only used when it is switched off.</span>
+</div></details>
+<p style="font-size:12px;color:var(--text-secondary);margin:10px 0 0;line-height:1.5;">Amber = your feet. Sounds: high beep = lift, middle beep = hold, low beep = lower, soft ticks = seconds. The voice counts your reps, tells you when to switch sides, and counts you down before the next side starts.</p>
+<p class="disclaimer">This is a general routine, not a replacement for your physio's guidance. Keep pain at 3/10 or below. Stop if pain exceeds 3/10 or if swelling, locking or giving way appears. No deep squats until the physio says so.</p>
+</section>
+<section id="s-knees" hidden>
+<p style="font-size:14px;line-height:1.5;margin:0 0 12px;color:var(--text-secondary);">Optional. Mark what your scan or physio found. The 3D knee will highlight those areas and this page will suggest which exercises fit. Everything stays on this phone.</p>
+<div style="display:flex;gap:6px;margin:0 0 10px;"><button id="fR" style="flex:1;font-size:13px;">Right knee</button><button id="fL" style="flex:1;font-size:13px;">Left knee</button></div>
+<div id="flist" style="display:grid;gap:6px;margin:0 0 14px;"></div>
+<div id="fsug" style="background:var(--surface-1);border-radius:12px;padding:12px;margin:0 0 14px;font-size:14px;line-height:1.5;"></div>
+<p style="font-size:15px;font-weight:500;margin:0 0 4px;">Build my routine</p>
+<p style="font-size:13px;color:var(--text-secondary);margin:0 0 8px;line-height:1.5;">Tick the exercises your physio gave you. The "My routine" button on the Routine tab plays only these.</p>
+<div id="fplan" style="display:grid;gap:6px;margin:0 0 8px;"></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 4px;"><button id="pAll" style="font-size:13px;">Tick all</button><button id="pNone" style="font-size:13px;">Clear</button><button id="pSug" style="font-size:13px;">Use suggested</button></div>
+<p class="disclaimer">Marking findings does not diagnose anything. It only highlights areas on the model and suggests general exercises. Your physio's plan always comes first.</p>
+</section>
+<section id="s-3d" hidden>
+<div id="chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px;"></div>
+<canvas id="c" style="width:100%;height:380px;display:block;touch-action:none;border-radius:12px;background:var(--surface-1);"></canvas>
+<div style="margin:10px 0 8px;min-height:64px;">
+<p id="pname" style="font-size:15px;font-weight:500;margin:0 0 2px;">Loading model</p>
+<p id="pdesc" style="font-size:13px;color:var(--text-secondary);margin:0;line-height:1.5;"></p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;">
+<button id="bSide" style="font-size:13px;">Switch to left knee</button>
+<button id="bFind" style="font-size:13px;">Show my findings</button>
+<button id="bUndo" style="font-size:13px;">Undo last hide</button>
+<button id="bReset" style="font-size:13px;">Reset</button>
+<button id="bVoice" style="font-size:13px;">Voice: on</button>
+<button id="bExplain" style="font-size:13px;">Explain my knee</button>
+</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin:8px 0 0;"><span><span style="color:#EF9F27;">&#9679;</span> your marked finding</span><span><span style="color:#378ADD;">&#9679;</span> joint fluid</span></div>
+<p id="note" style="font-size:12px;color:var(--text-secondary);margin:8px 0 0;min-height:32px;line-height:1.5;"></p>
+
+<p class="disclaimer">A stylized teaching model, not anatomically exact.</p>
+</section>
+</main>
+<script>
+(function(){
+var secs={routine:document.getElementById("s-routine"),knees:document.getElementById("s-knees"),"3d":document.getElementById("s-3d")};
+var tb=document.querySelectorAll("#tabs button"),loaded3d=false;
+function load(src,cb){var s=document.createElement("script");s.src=src;s.onload=cb;s.onerror=function(){document.getElementById("pname").textContent="The 3D library could not load. Try again in a moment.";};document.body.appendChild(s);}
+function tab(k){
+  Object.keys(secs).forEach(function(j){secs[j].hidden=j!==k;});
+  tb.forEach(function(b){var on=b.dataset.s===k;b.style.borderColor=on?"var(--border-accent)":"";b.style.background=on?"var(--bg-accent)":"";b.style.color=on?"var(--text-accent)":"";});
+  try{localStorage.setItem("knee-tab",k);}catch(e){}
+  if(k==="3d"&&!loaded3d){loaded3d=true;load("vendor/three.min.js",function(){load("vendor/OrbitControls.js",function(){load("knee3d.js");});});}
+}
+tb.forEach(function(b){b.onclick=function(){tab(b.dataset.s);};});
+var start="routine";try{start=localStorage.getItem("knee-tab")||"routine";}catch(e){}
+tab(secs[start]?start:"routine");
+window.kneeTab=tab;
+})();
+</script>
+<script src="exdata.js"></script>
+<script src="findata.js"></script>
+<script src="findings.js"></script>
+<script src="routine.js"></script>
+<script src="habit.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script>
+</body>
+</html>
